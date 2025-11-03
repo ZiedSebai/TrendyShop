@@ -11,13 +11,13 @@ export class ProductsController {
     return this.productsService.findAll(query);
   }
 
-  @Get(':id')
-  getById(@Param('id') id: string) {
-    return this.productsService.findById(id);
-  }
-
   @Get('search')
   search(@Query('q') q: string) {
     return this.productsService.search(q);
+  }
+
+  @Get(':id')
+  getById(@Param('id') id: string) {
+    return this.productsService.findById(id);
   }
 }

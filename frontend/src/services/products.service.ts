@@ -17,6 +17,18 @@ export interface SearchResponse {
   count: number;
 }
 
+const transformProduct = (product: any): Product => ({
+  id: product._id || product.id,
+  name: product.name,
+  price: product.price,
+  description: product.description,
+  category: product.category,
+  images: product.images || [],
+  sizes: product.sizes || [],
+  colors: product.colors || [],
+  inStock: product.inStock,
+});
+
 export const productsService = {
   async getAll(params?: {
     category?: string;
@@ -31,14 +43,23 @@ export const productsService = {
     if (params?.limit) queryParams.append('limit', params.limit.toString());
 
     const query = queryParams.toString();
-    return apiClient(`/api/products${query ? `?${query}` : ''}`);
+    const response = await apiClient(`/api/products${query ? `?${query}` : ''}`);
+    return {
+      ...response,
+      products: response.products.map(transformProduct),
+    };
   },
 
   async getById(id: string): Promise<Product> {
-    return apiClient(`/api/products/${id}`);
+    const product = await apiClient(`/api/products/${id}`);
+    return transformProduct(product);
   },
 
   async search(query: string): Promise<SearchResponse> {
-    return apiClient(`/api/products/search?q=${encodeURIComponent(query)}`);
+    const response = await apiClient(`/api/products/search?q=${encodeURIComponent(query)}`);
+    return {
+      ...response,
+      results: response.results.map(transformProduct),
+    };
   },
 };
