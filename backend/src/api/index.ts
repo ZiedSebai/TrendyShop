@@ -1,4 +1,4 @@
-import { createApp } from "src/main";
+import { createApp } from 'src/main';
 
 let cachedServer: any;
 
@@ -7,5 +7,6 @@ export default async function handler(req, res) {
     const server = await createApp();
     cachedServer = server;
   }
+
   return cachedServer(req, res);
 }

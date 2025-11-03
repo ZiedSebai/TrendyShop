@@ -1,13 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import  express from 'express';
-
-const server = express();
+import * as express from 'express';
 
 export async function createApp() {
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+  const app = await NestFactory.create(AppModule);
 
   app.enableCors({
     origin: [process.env.FRONT_BASE_URL, 'https://trendy-shop-lu5s.vercel.app', 'http://localhost:5173'].filter(Boolean),
@@ -18,11 +15,14 @@ export async function createApp() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  // Health route
   app.getHttpAdapter().get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
-  await app.init();
-  return server;
+  return app;
+}
+
+// Run only when not imported (for local dev)
+if (require.main === module) {
+  createApp().then(app => app.listen(3000));
 }
