@@ -6,8 +6,10 @@ import serverless from 'serverless-http';
 import express from 'express';
 
 const expressApp = express();
-
 let nestAppInitialized = false;
+
+// Create the serverless wrapper once
+const serverlessHandler = serverless(expressApp);
 
 export default async function handler(req: any, res: any) {
   if (!nestAppInitialized) {
@@ -29,5 +31,6 @@ export default async function handler(req: any, res: any) {
     nestAppInitialized = true;
   }
 
-  return serverless(expressApp)(req, res);
+  // Await the serverless wrapper
+  return await serverlessHandler(req, res);
 }
