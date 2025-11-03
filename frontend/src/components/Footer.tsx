@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container max-w-8xl mx-auto px-4 md:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Urban Threads</h3>
+            <h3 className="text-lg font-semibold">Trendy Shop</h3>
             <p className="text-sm text-muted-foreground">
               Curated fashion for the modern urbanite.
             </p>
@@ -67,7 +67,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Urban Threads. All rights reserved.
+          © {new Date().getFullYear()} Trendy Shop. All rights reserved.
         </div>
       </div>
     </footer>

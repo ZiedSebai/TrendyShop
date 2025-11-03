@@ -13,7 +13,7 @@ const About = () => {
         <section className="py-16 md:py-24">
           <div className="container max-w-4xl mx-auto px-4 md:px-6 text-center space-y-6">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              About Urban Threads
+              About Trendy Shop
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Curating timeless fashion for the modern urbanite since 2020
@@ -28,7 +28,7 @@ const About = () => {
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Our Story</h2>
               <div className="prose prose-lg max-w-none text-muted-foreground space-y-4">
                 <p>
-                  Urban Threads was born from a simple belief: fashion should be timeless, not trendy. 
+                  Trendy Shop was born from a simple belief: fashion should be timeless, not trendy. 
                   In a world of fast fashion and disposable clothing, we saw a need for something different—pieces 
                   that would last, both in quality and style.
                 </p>

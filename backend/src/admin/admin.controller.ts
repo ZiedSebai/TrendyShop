@@ -21,6 +21,11 @@ import { AdminGuard } from '../auth/admin.guard';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  @Get('stats')
+  getDashboardStats() {
+    return this.adminService.getDashboardStats();
+  }
+
   @Get('products')
   getAllProducts(@Query() query: any) {
     return this.adminService.getAllProducts(query);

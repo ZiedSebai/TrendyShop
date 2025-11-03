@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Package, ShoppingCart, Users } from "lucide-react";
+import { Home, Package, ShoppingCart, Users, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navigation = [
@@ -9,15 +10,29 @@ const navigation = [
   { name: "Users", href: "/admin/users", icon: Users },
 ];
 
-const AdminSidebar = () => {
+interface AdminSidebarProps {
+  onClose?: () => void;
+}
+
+const AdminSidebar = ({ onClose }: AdminSidebarProps) => {
   const location = useLocation();
 
   return (
     <div className="flex h-full w-64 flex-col bg-card border-r">
-      <div className="flex h-16 items-center border-b px-6">
+      <div className="flex h-16 items-center justify-between border-b px-6">
         <Link to="/admin/dashboard" className="flex items-center space-x-2">
           <h1 className="text-xl font-bold">Admin Panel</h1>
         </Link>
+        {onClose && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={onClose}
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        )}
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-4">
@@ -27,6 +42,7 @@ const AdminSidebar = () => {
             <Link
               key={item.name}
               to={item.href}
+              onClick={onClose}
               className={cn(
                 "flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                 isActive

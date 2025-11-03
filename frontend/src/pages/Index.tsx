@@ -91,7 +91,7 @@ const Index = () => {
                 Thoughtfully Crafted
               </h2>
               <p className="text-lg text-muted-foreground">
-                At Urban Threads, we believe in quality over quantity. Each piece is carefully selected
+                At Trendy Shop, we believe in quality over quantity. Each piece is carefully selected
                 for its timeless design, superior craftsmanship, and sustainable materials. Our mission
                 is to help you build a wardrobe that lasts.
               </p>
