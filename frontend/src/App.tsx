@@ -13,6 +13,7 @@ import Cart from "./pages/Cart";
 import Auth from "./pages/Auth";
 import About from "./pages/About";
 import Search from "./pages/Search";
+import Categories from "./pages/Categories";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -39,6 +40,7 @@ const App = () => (
                 <Route path="/account" element={<Auth />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/search" element={<Search />} />
+                <Route path="/categories" element={<Categories />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/products" element={<AdminProducts />} />
