@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { authService } from "@/services/auth.service";
 import { useAuth } from "@/context/AuthContext";
 
-const Auth = () => {
+const Login = () => {
   const navigate = useNavigate();
   const { user, isLoading: authLoading, refreshUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -176,4 +176,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default Login;
