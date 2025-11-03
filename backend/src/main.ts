@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: [process.env.FRONT_BASE_URL, 'http://localhost:5173'],
+    origin: [process.env.FRONT_BASE_URL, 'https://trendy-shop-lu5s.vercel.app', 'http://localhost:5173'].filter(Boolean),
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
