@@ -7,7 +7,6 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { productsService } from "@/services/products.service";
 import { Product } from "@/types/product";
-import heroImage from "@/assets/hero-image.jpg";
 
 const Index = () => {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -30,15 +29,8 @@ const Index = () => {
       <Header />
 
       <main className="flex-1">
-        <section className="relative h-[80vh] min-h-[600px] overflow-hidden">
-          <div className="absolute inset-0">
-            <img
-              src={heroImage}
-              alt="Urban Threads Collection"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/40" />
-          </div>
+        <section className="relative h-[80vh] min-h-[600px] overflow-hidden bg-secondary">
+          <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/40" />
 
           <div className="relative h-full container max-w-8xl mx-auto px-4 md:px-6 flex items-center">
             <div className="max-w-xl space-y-6 animate-fade-in">
