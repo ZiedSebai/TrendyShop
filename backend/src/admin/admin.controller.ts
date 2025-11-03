@@ -91,4 +91,34 @@ export class AdminController {
   deleteProduct(@Param('id') id: string) {
     return this.adminService.deleteProduct(id);
   }
+
+  @Get('orders')
+  getAllOrders(@Query() query: any) {
+    return this.adminService.getAllOrders(query);
+  }
+
+  @Get('orders/:id')
+  getOrderById(@Param('id') id: string) {
+    return this.adminService.getOrderById(id);
+  }
+
+  @Put('orders/:id/status')
+  updateOrderStatus(@Param('id') id: string, @Body() body: { status: string }) {
+    return this.adminService.updateOrderStatus(id, body.status);
+  }
+
+  @Get('users')
+  getAllUsers(@Query() query: any) {
+    return this.adminService.getAllUsers(query);
+  }
+
+  @Get('users/:id')
+  getUserById(@Param('id') id: string) {
+    return this.adminService.getUserById(id);
+  }
+
+  @Put('users/:id/admin')
+  toggleAdminStatus(@Param('id') id: string, @Body() body: { isAdmin: boolean }) {
+    return this.adminService.toggleAdminStatus(id, body.isAdmin);
+  }
 }

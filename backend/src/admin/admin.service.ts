@@ -2,11 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Product, ProductDocument } from '../products/schemas/product.schema';
+import { Order, OrderDocument } from '../orders/schemas/order.schema';
+import { User, UserDocument } from '../users/schemas/user.schema';
 import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class AdminService {
-  constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>) {
+  constructor(
+    @InjectModel(Product.name) private productModel: Model<ProductDocument>,
+    @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+  ) {
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
       api_key: process.env.CLOUDINARY_API_KEY,
@@ -89,5 +95,95 @@ export class AdminService {
     const product = await this.productModel.findByIdAndDelete(id);
     if (!product) throw new NotFoundException('Product not found');
     return { message: 'Product deleted successfully' };
+  }
+
+  async getAllOrders(query: any) {
+    const { page = 1, limit = 20, status, search } = query;
+    const filter: any = {};
+
+    if (status) filter.status = status;
+    if (search) filter.orderNumber = { $regex: search, $options: 'i' };
+
+    const orders = await this.orderModel
+      .find(filter)
+      .populate('userId', 'name email')
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const total = await this.orderModel.countDocuments(filter);
+
+    return {
+      orders,
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async getOrderById(id: string) {
+    const order = await this.orderModel.findById(id).populate('userId', 'name email');
+    if (!order) throw new NotFoundException('Order not found');
+    return order;
+  }
+
+  async updateOrderStatus(id: string, status: string) {
+    const order = await this.orderModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+    if (!order) throw new NotFoundException('Order not found');
+    return { message: 'Order status updated successfully', order };
+  }
+
+  async getAllUsers(query: any) {
+    const { page = 1, limit = 20, search } = query;
+    const filter: any = {};
+
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const users = await this.userModel
+      .find(filter)
+      .select('-password')
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const total = await this.userModel.countDocuments(filter);
+
+    return {
+      users,
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async getUserById(id: string) {
+    const user = await this.userModel.findById(id).select('-password');
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  async toggleAdminStatus(id: string, isAdmin: boolean) {
+    const user = await this.userModel.findByIdAndUpdate(
+      id,
+      { isAdmin },
+      { new: true }
+    ).select('-password');
+    if (!user) throw new NotFoundException('User not found');
+    return { message: 'User admin status updated successfully', user };
   }
 }
