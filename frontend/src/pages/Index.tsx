@@ -29,7 +29,7 @@ const Index = () => {
       <Header />
 
       <main className="flex-1">
-        <section className="relative h-[80vh] min-h-[600px] overflow-hidden bg-secondary">
+        <section className="relative h-[80vh] min-h-[600px] overflow-hidden bg-secondary bg-[url('/imgs/bg.jpg')]">
           <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/40" />
 
           <div className="relative h-full container max-w-8xl mx-auto px-4 md:px-6 flex items-center">
