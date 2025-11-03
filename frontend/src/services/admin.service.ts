@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/api';
+const API_BASE_URL = 'http://localhost:3000';
 
 export interface AdminProduct {
   _id: string;
@@ -45,7 +46,7 @@ export const adminService = {
 
   async createProduct(formData: FormData): Promise<{ message: string; product: AdminProduct }> {
     const token = localStorage.getItem('auth_token');
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/products`, {
+    const response = await fetch(`${API_BASE_URL}/api/admin/products`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -66,7 +67,7 @@ export const adminService = {
     formData: FormData
   ): Promise<{ message: string; product: AdminProduct }> {
     const token = localStorage.getItem('auth_token');
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/products/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/api/admin/products/${id}`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
