@@ -19,10 +19,17 @@ if (!cached) {
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('MONGO_URI')!, // the '!' asserts it's not undefined
-        dbName: config.get<string>('MONGO_DB') || 'test',
-      }),
+      useFactory: async (config: ConfigService) => {
+        const uri = config.get<string>('MONGO_URI');
+        if (!uri) {
+          throw new Error('MONGO_URI environment variable is not set!');
+        }
+
+        return {
+          uri,
+          dbName: config.get<string>('MONGO_DB') || 'test',
+        };
+      },
       inject: [ConfigService],
     }),
     AuthModule,
