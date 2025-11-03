@@ -1,4 +1,3 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -10,14 +9,29 @@ import { OrdersModule } from './orders/orders.module';
 import { AdminModule } from './admin/admin.module';
 import { CheckoutModule } from './checkout/checkout.module';
 
+let cached = globalThis.mongo; // cache across serverless calls
+if (!cached) {
+  cached = globalThis.mongo = { conn: null, promise: null };
+}
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('MONGO_URI') || '',
-      }),
+      useFactory: async (config: ConfigService) => {
+        if (cached.conn) return cached.conn;
+
+        if (!cached.promise) {
+          cached.promise = MongooseModule.forRoot(config.get<string>('MONGO_URI') || '', {
+            // options
+            dbName: config.get<string>('MONGO_DB') || 'test',
+          });
+        }
+
+        cached.conn = await cached.promise;
+        return cached.conn;
+      },
       inject: [ConfigService],
     }),
     AuthModule,
