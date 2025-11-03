@@ -26,13 +26,10 @@ async function createApp(): Promise<express.Express> {
     credentials: true,
   });
 
-  // Handle preflight for serverless
-  expressApp.options('*', (_req, res) => res.sendStatus(200));
-
   // Global validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  // Health endpoint
+  // Add /health route directly in Express
   expressApp.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({ status: 'ok' });
   });
@@ -42,7 +39,7 @@ async function createApp(): Promise<express.Express> {
   return expressApp;
 }
 
-// Vercel handler
+// Default export for Vercel serverless
 export default async function handler(req: Request, res: Response) {
   const app = await createApp();
   app(req, res);
