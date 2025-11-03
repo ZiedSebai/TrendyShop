@@ -6,31 +6,33 @@ import serverless from 'serverless-http';
 import express from 'express';
 
 const expressApp = express();
-let nestAppInitialized = false;
+let initialized = false;
+let serverlessHandler: any;
 
-// Create the serverless wrapper once
-const serverlessHandler = serverless(expressApp);
+async function initNest() {
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
+
+  app.enableCors({
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? 'https://trendy-shop-lu5s.vercel.app'
+        : 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  });
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+  await app.init();
+  serverlessHandler = serverless(expressApp);
+  initialized = true;
+}
 
 export default async function handler(req: any, res: any) {
-  if (!nestAppInitialized) {
-    const app = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
-
-    app.enableCors({
-      origin:
-        process.env.NODE_ENV === 'production'
-          ? 'https://trendy-shop-lu5s.vercel.app'
-          : 'http://localhost:5173',
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true,
-    });
-
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-
-    await app.init();
-    nestAppInitialized = true;
+  if (!initialized) {
+    await initNest();
   }
 
-  // Await the serverless wrapper
-  return await serverlessHandler(req, res);
+  return serverlessHandler(req, res);
 }
