@@ -1,13 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import express from 'express';
 
-const server = express();
-
-export async function createApp() {
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
 
   app.enableCors({
     origin: [
@@ -22,11 +18,15 @@ export async function createApp() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  // Health check endpoint
+  // Health route
   app.getHttpAdapter().get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
-  await app.init();
-  return server;
+  // Only listen if not on Vercel
+  if (!process.env.VERCEL) {
+    await app.listen(3000);
+    console.log('Server running on http://localhost:3000');
+  }
 }
+bootstrap();
