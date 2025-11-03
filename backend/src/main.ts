@@ -1,18 +1,33 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import serverless from 'serverless-http';
+import express from 'express';
 
-export async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+const expressApp = express();
 
-  app.enableCors({
-    origin: [process.env.FRONT_BASE_URL, 'https://trendy-shop-lu5s.vercel.app', 'http://localhost:5173'].filter(Boolean),
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  });
+let nestAppInitialized = false;
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  await app.listen(3000);
+export default async function handler(req: any, res: any) {
+  if (!nestAppInitialized) {
+    const app = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
+
+    app.enableCors({
+      origin:
+        process.env.NODE_ENV === 'production'
+          ? 'https://trendy-shop-lu5s.vercel.app'
+          : 'http://localhost:5173',
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
+    });
+
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+    await app.init();
+    nestAppInitialized = true;
+  }
+
+  return serverless(expressApp)(req, res);
 }
-bootstrap();
