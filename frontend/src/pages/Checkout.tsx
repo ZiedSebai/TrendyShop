@@ -200,7 +200,7 @@ const Checkout = () => {
   useEffect(() => {
     if (!authLoading && !user) {
       toast.error("Please login to checkout");
-      navigate("/account");
+      navigate("/auth");
       return;
     }
 

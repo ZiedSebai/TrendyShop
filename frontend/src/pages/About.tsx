@@ -103,7 +103,7 @@ const About = () => {
                   Shop Collection
                 </Button>
               </Link>
-              <Link to="/account">
+              <Link to="/auth">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   Create Account
                 </Button>
