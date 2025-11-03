@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Urban Threads Design System - Sophisticated E-commerce */
+    --background: 220 13% 98%;
+    --foreground: 220 9% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 9% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 9% 11%;
+
+    /* Primary: Sophisticated Gray (#4B5563 - gray-600) */
+    --primary: 220 9% 35%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 220 9% 30%;
+
+    /* Accent: Deep Charcoal (#111827 - gray-900) */
+    --accent: 220 13% 9%;
+    --accent-foreground: 0 0% 100%;
+    --accent-hover: 220 13% 15%;
+
+    /* Secondary: Light subtle bg */
+    --secondary: 220 13% 96%;
+    --secondary-foreground: 220 9% 11%;
+
+    /* Muted for less emphasis */
+    --muted: 220 13% 95%;
+    --muted-foreground: 220 9% 46%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 9% 35%;
+
+    --radius: 0.5rem;
+
+    /* Custom design tokens */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  }
+
+  .dark {
+    --background: 220 13% 9%;
+    --foreground: 220 13% 98%;
+
+    --card: 220 13% 11%;
+    --card-foreground: 220 13% 98%;
+
+    --popover: 220 13% 11%;
+    --popover-foreground: 220 13% 98%;
+
+    --primary: 220 13% 98%;
+    --primary-foreground: 220 9% 11%;
+    --primary-hover: 220 13% 91%;
+
+    --accent: 220 13% 15%;
+    --accent-foreground: 220 13% 98%;
+    --accent-hover: 220 13% 20%;
+
+    --secondary: 220 13% 15%;
+    --secondary-foreground: 220 13% 98%;
+
+    --muted: 220 13% 15%;
+    --muted-foreground: 220 9% 65%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 20%;
+    --input: 220 13% 20%;
+    --ring: 220 13% 91%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .hover-scale {
+    @apply transition-transform duration-300 ease-in-out hover:scale-105;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
