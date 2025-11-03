@@ -13,7 +13,7 @@ interface AdminLayoutProps {
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const navigate = useNavigate();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, refreshUser } = useAuth();
 
   useEffect(() => {
     if (!isLoading && (!user || !user.isAdmin)) {
@@ -25,6 +25,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const handleLogout = async () => {
     try {
       await authService.logout();
+      await refreshUser();
       toast.success("Logged out successfully");
       navigate("/admin/login");
     } catch (error) {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,11 +7,19 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { authService } from "@/services/auth.service";
+import { useAuth } from "@/context/AuthContext";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const { user, isLoading: authLoading, refreshUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+
+  useEffect(() => {
+    if (!authLoading && user && user.isAdmin) {
+      navigate("/admin/dashboard");
+    }
+  }, [user, authLoading, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +28,7 @@ const AdminLogin = () => {
     try {
       const response = await authService.adminLogin(loginData);
       toast.success(response.message);
+      await refreshUser();
       navigate("/admin/dashboard");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Admin login failed");
@@ -27,6 +36,14 @@ const AdminLogin = () => {
       setIsLoading(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-secondary">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-secondary">

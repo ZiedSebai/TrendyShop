@@ -8,9 +8,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { authService } from "@/services/auth.service";
+import { useAuth } from "@/context/AuthContext";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({ name: "", email: "", password: "" });
@@ -22,6 +24,7 @@ const Auth = () => {
     try {
       const response = await authService.login(loginData);
       toast.success(response.message);
+      await refreshUser();
       navigate("/");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Login failed");
@@ -37,6 +40,7 @@ const Auth = () => {
     try {
       const response = await authService.register(signupData);
       toast.success(response.message);
+      await refreshUser();
       navigate("/");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Registration failed");
