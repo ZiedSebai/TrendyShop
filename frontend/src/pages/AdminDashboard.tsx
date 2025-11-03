@@ -73,10 +73,10 @@ const AdminDashboard = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Overview of your store performance</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Overview of your store performance</p>
         </div>
 
         {isLoading ? (
@@ -85,16 +85,16 @@ const AdminDashboard = () => {
           </div>
         ) : (
           <>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 md:gap-4 grid-cols-2 lg:grid-cols-4">
               {statsCards.map((stat) => (
                 <Card key={stat.title}>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                    <stat.icon className="h-4 w-4 text-muted-foreground" />
+                    <CardTitle className="text-xs md:text-sm font-medium">{stat.title}</CardTitle>
+                    <stat.icon className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{stat.value}</div>
-                    <p className="text-xs text-muted-foreground">{stat.change}</p>
+                    <div className="text-xl md:text-2xl font-bold">{stat.value}</div>
+                    <p className="text-xs text-muted-foreground line-clamp-1">{stat.change}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -102,8 +102,8 @@ const AdminDashboard = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>Recent Orders</CardTitle>
-                <CardDescription>Latest orders from your store</CardDescription>
+                <CardTitle className="text-lg md:text-xl">Recent Orders</CardTitle>
+                <CardDescription className="text-sm">Latest orders from your store</CardDescription>
               </CardHeader>
               <CardContent>
                 {recentOrders.length === 0 ? (
@@ -111,40 +111,42 @@ const AdminDashboard = () => {
                     <p className="text-muted-foreground">No orders yet</p>
                   </div>
                 ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Order ID</TableHead>
-                        <TableHead>Customer</TableHead>
-                        <TableHead>Items</TableHead>
-                        <TableHead>Amount</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Date</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {recentOrders.map((order) => (
-                        <TableRow key={order.id}>
-                          <TableCell className="font-medium">{order.id}</TableCell>
-                          <TableCell>{order.customer}</TableCell>
-                          <TableCell>{order.itemCount} items</TableCell>
-                          <TableCell>${order.total.toFixed(2)}</TableCell>
-                          <TableCell>
-                            <span
-                              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${getStatusColor(
-                                order.status
-                              )}`}
-                            >
-                              {order.status}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            {new Date(order.createdAt).toLocaleDateString()}
-                          </TableCell>
+                  <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="whitespace-nowrap">Order ID</TableHead>
+                          <TableHead className="whitespace-nowrap">Customer</TableHead>
+                          <TableHead className="whitespace-nowrap">Items</TableHead>
+                          <TableHead className="whitespace-nowrap">Amount</TableHead>
+                          <TableHead className="whitespace-nowrap">Status</TableHead>
+                          <TableHead className="whitespace-nowrap">Date</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {recentOrders.map((order) => (
+                          <TableRow key={order.id}>
+                            <TableCell className="font-medium whitespace-nowrap">{order.id}</TableCell>
+                            <TableCell className="whitespace-nowrap">{order.customer}</TableCell>
+                            <TableCell className="whitespace-nowrap">{order.itemCount} items</TableCell>
+                            <TableCell className="whitespace-nowrap">${order.total.toFixed(2)}</TableCell>
+                            <TableCell>
+                              <span
+                                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize whitespace-nowrap ${getStatusColor(
+                                  order.status
+                                )}`}
+                              >
+                                {order.status}
+                              </span>
+                            </TableCell>
+                            <TableCell className="whitespace-nowrap">
+                              {new Date(order.createdAt).toLocaleDateString()}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 )}
               </CardContent>
             </Card>
