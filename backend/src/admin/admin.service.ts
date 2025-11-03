@@ -33,6 +33,45 @@ export class AdminService {
     });
   }
 
+  async getDashboardStats() {
+    const totalProducts = await this.productModel.countDocuments();
+    const totalOrders = await this.orderModel.countDocuments();
+    const totalUsers = await this.userModel.countDocuments();
+
+    const orders = await this.orderModel.find();
+    const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+
+    const completedOrders = await this.orderModel.countDocuments({ status: 'completed' });
+    const inStockProducts = await this.productModel.countDocuments({ inStock: true });
+
+    const recentOrders = await this.orderModel
+      .find()
+      .populate('userId', 'name email')
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    const formattedRecentOrders = recentOrders.map(order => ({
+      id: order.orderNumber,
+      customer: order.userId ? (order.userId as any).name : 'Unknown',
+      total: order.total,
+      status: order.status,
+      itemCount: order.items.reduce((sum, item) => sum + item.quantity, 0),
+      createdAt: order.createdAt,
+    }));
+
+    return {
+      stats: {
+        totalRevenue,
+        totalOrders,
+        totalProducts,
+        totalUsers,
+        completedOrders,
+        inStockProducts,
+      },
+      recentOrders: formattedRecentOrders,
+    };
+  }
+
   async getAllProducts(query: any) {
     const { page = 1, limit = 20, category, search } = query;
     const filter: any = {};
