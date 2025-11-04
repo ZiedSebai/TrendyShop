@@ -1,23 +1,15 @@
-# Use official Node.js LTS image
 FROM node:18-alpine
 
-# Set working directory
 WORKDIR /usr/src/app
 
-# Copy package files first
 COPY package*.json ./
 
-# Install dependencies
 RUN npm install
 
-# Copy the entire project
 COPY . .
 
-# Build the NestJS project
 RUN npm run build
 
-# Expose NestJS default port
 EXPOSE 3000
 
-# Run the compiled app
 CMD ["npm", "run", "start:prod"]
